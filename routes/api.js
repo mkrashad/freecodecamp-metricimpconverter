@@ -8,15 +8,23 @@ module.exports = function (app) {
 
   app.route('/api/convert').get(function (req, res) {
     const initNum = convertHandler.getNum(req.query.input);
+    if (!initNum) {
+      res.send('invalid number');
+    }
     const initUnit = convertHandler.getUnit(req.query.input);
-    const convertNumUnit = convertHandler.convert(initNum, initUnit);
+    const [convertNumUnit, fullInitUnit, fullReturnUnit] =
+      convertHandler.convert(initNum, initUnit);
+
+    if (!convertNumUnit) {
+      res.send('invalid unit');
+    }
     const returnNum = convertHandler.spellOutUnit(convertNumUnit);
     const returnUnit = convertHandler.getReturnUnit(convertNumUnit);
     const convertString = convertHandler.getString(
       initNum,
-      initUnit,
+      fullInitUnit,
       returnNum,
-      returnUnit
+      fullReturnUnit
     );
 
     res.status(200).json({
