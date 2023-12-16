@@ -1,17 +1,28 @@
 function ConvertHandler() {
   this.getNum = function (input) {
-    const pattern = /([0-9]+([.][0-9]*)?|[.][0-9]+)/g;
-    const result = input.match(pattern);
-    return Number(result[0]);
+    const pattern = /^(-?\d+(\.\d+)?(\/\d+(\.\d+)?)?)/;
+    if (input) {
+      const result = input.match(pattern);
+      if (result) {
+        return eval(result[0]);
+      }
+    }
+    return null;
   };
 
   this.getUnit = function (input) {
-    const pattern = /[gal|l|lbs|kg|mi|km]/gi;
-    const result = input.match(pattern).join('');
-    if (result === 'l' || result === 'L') {
-      return result.toUpperCase();
+    const pattern = /(gal|l|lbs|kg|mi|km)$/gi;
+    if (input) {
+      let result = input.match(pattern);
+      if (result) {
+        const unit = result[0];
+        if (unit === 'l' || unit === 'L') {
+          return unit.toUpperCase();
+        }
+        return unit.toLowerCase();
+      }
     }
-    return result.toLowerCase();
+    return null;
   };
 
   this.getReturnUnit = function (initUnit) {
@@ -19,7 +30,11 @@ function ConvertHandler() {
   };
 
   this.spellOutUnit = function (input) {
-    return Number(this.getNum(input).toFixed(5));
+    if (input) {
+      return Number(this.getNum(input).toFixed(5));
+    } else {
+      return null;
+    }
   };
 
   this.convert = function (initNum, initUnit) {
