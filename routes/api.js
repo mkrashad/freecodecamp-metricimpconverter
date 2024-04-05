@@ -7,19 +7,19 @@ module.exports = function (app) {
   let convertHandler = new ConvertHandler();
 
   app.route('/api/convert').get(function (req, res) {
-    const initNum = convertHandler.getNum(req.query.input);
-    const initUnit = convertHandler.getUnit(req.query.input);
-
-    if (initNum === 'invalid number') {
-      res.json('invalid number').status(403);
+    const [initNum, unit] = convertHandler.getNum(req.query.input);
+    const initUnit = convertHandler.getUnit(unit);
+    if (initNum == '') {
+      initNum = 1;
     }
-
-    if (initUnit === 'invalid unit') {
-      res.json('invalid unit').status(403);
-    }
-
     if (!initNum && !initUnit) {
       res.json('invalid number and unit').status(403);
+    }
+    if (!initUnit) {
+      res.json('invalid unit').status(403);
+    }
+    if (isNaN(initNum)) {
+      res.json('invalid number').status(403);
     }
 
     const [convertNumUnit, fullInitUnit, fullReturnUnit] =
@@ -33,13 +33,14 @@ module.exports = function (app) {
       returnNum,
       fullReturnUnit
     );
-
-    res.status(200).json({
-      initNum,
-      initUnit,
-      returnNum,
-      returnUnit,
-      string: convertString,
-    });
+    res
+      .json({
+        initNum,
+        initUnit,
+        returnNum,
+        returnUnit,
+        string: convertString,
+      })
+      .status(200);
   });
 };
