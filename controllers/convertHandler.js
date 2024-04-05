@@ -5,12 +5,12 @@ function ConvertHandler() {
       if (inputNumber.includes('/')) {
         inputNumber = this.formatNumber(inputNumber);
       }
-      
-      const letters = input.split(/\d\s*/);
-      const inputUnit = letters[letters.length - 1];
-      return [inputNumber, inputUnit];
+      if (inputNumber == '') {
+        inputNumber = 1;
+      }
+      return inputNumber;
     } catch (error) {
-      return null;
+      throw Error;
     }
   };
 
@@ -30,8 +30,10 @@ function ConvertHandler() {
   };
 
   this.getUnit = function (input) {
+    const letters = input.split(/\d\s*/);
+    const inputUnit = letters[letters.length - 1];
     const units = ['gal', 'l', 'lbs', 'kg', 'mi', 'km'];
-    const lowerInput = input.toLowerCase();
+    const lowerInput = inputUnit.toLowerCase();
     try {
       for (let unit of units) {
         if (lowerInput === unit) {
@@ -42,16 +44,16 @@ function ConvertHandler() {
         }
       }
     } catch (error) {
-      return null;
+      throw Error;
     }
   };
 
   this.getReturnUnit = function (input) {
-    return this.getUnit(this.getNum(input)[1]);
+    return this.getUnit(input);
   };
 
   this.spellOutUnit = function (input) {
-    return Number(parseFloat(this.getNum(input)[0]).toFixed(5));
+    return Number(parseFloat(this.getNum(input)).toFixed(5));
   };
 
   this.convert = function (initNum, initUnit) {
