@@ -1,6 +1,5 @@
 'use strict';
 
-const expect = require('chai').expect;
 const ConvertHandler = require('../controllers/convertHandler.js');
 
 module.exports = function (app) {
@@ -19,12 +18,13 @@ module.exports = function (app) {
     if (isNaN(initNum)) {
       res.json('invalid number').status(403);
     }
+    const returnUnit = convertHandler.getReturnUnit(initNum, initUnit);
 
-    const [convertNumUnit, fullInitUnit, fullReturnUnit] =
+    const returnNum = convertHandler.spellOutUnit(initNum, initUnit);
+
+    const [result, fullInitUnit, fullReturnUnit, shortReturnUnit] =
       convertHandler.convert(initNum, initUnit);
 
-    const returnNum = convertHandler.spellOutUnit(convertNumUnit);
-    const returnUnit = convertHandler.getReturnUnit(convertNumUnit);
     const convertString = convertHandler.getString(
       initNum,
       fullInitUnit,

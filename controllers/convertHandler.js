@@ -17,7 +17,6 @@ function ConvertHandler() {
   this.formatNumber = function (input) {
     const fractionString = input;
     const parts = fractionString.split('/');
-
     if (parts.length === 2) {
       const numerator = parseFloat(parts[0]);
       const denominator = parseFloat(parts[1]);
@@ -48,12 +47,14 @@ function ConvertHandler() {
     }
   };
 
-  this.getReturnUnit = function (input) {
-    return this.getUnit(input);
+  this.getReturnUnit = function (value, unit) {
+    const returnUnit = this.convert(value, unit);
+    return returnUnit[3];
   };
 
-  this.spellOutUnit = function (input) {
-    return Number(parseFloat(this.getNum(input)).toFixed(5));
+  this.spellOutUnit = function (value, unit) {
+    const returnNum = this.convert(value, unit)[0];
+    return Number(parseFloat(returnNum).toFixed(5));
   };
 
   this.convert = function (initNum, initUnit) {
@@ -66,60 +67,58 @@ function ConvertHandler() {
       km: 'kilometers',
     };
 
-    // const unitNames2 = {
-    //   gal: { initUnitName: 'gallons', conversion: 3.78541 },
-    //   L: { initUnitName: 'Liters' },
-    //   lbs: { initUnitName: 'pounds', conversion: 0.453592 },
-    //   kg: { initUnitName: 'kilograms' },
-    //   mi: { initUnitName: 'miles', conversion: 1.60934 },
-    //   km: { initUnitName: 'kilometers' },
-    // };
-
     // Conversion
     const galToL = 3.78541;
     const lbsToKg = 0.453592;
     const miToKm = 1.60934;
 
+    let result;
     let fullInitUnit;
     let fullReturnUnit;
-    let result;
+    let shortReturnUnit;
 
     switch (initUnit) {
       case 'gal':
-        result = initNum * galToL + 'L';
+        result = initNum * galToL;
         fullInitUnit = unitNames.gal;
         fullReturnUnit = unitNames.L;
+        shortReturnUnit = 'L';
         break;
       case 'L':
-        result = initNum / galToL + 'gal';
+        result = initNum / galToL;
         fullInitUnit = unitNames.L;
         fullReturnUnit = unitNames.gal;
+        shortReturnUnit = 'gal';
         break;
       case 'lbs':
-        result = initNum * lbsToKg + 'kg';
+        result = initNum * lbsToKg;
         fullInitUnit = unitNames.lbs;
         fullReturnUnit = unitNames.kg;
+        shortReturnUnit = 'kg';
         break;
       case 'kg':
-        result = initNum / lbsToKg + 'lbs';
+        result = initNum / lbsToKg;
         fullInitUnit = unitNames.kg;
         fullReturnUnit = unitNames.lbs;
+        shortReturnUnit = 'lbs';
         break;
       case 'mi':
-        result = initNum * miToKm + 'km';
+        result = initNum * miToKm;
         fullInitUnit = unitNames.mi;
         fullReturnUnit = unitNames.km;
+        shortReturnUnit = 'km';
         break;
       case 'km':
-        result = initNum / miToKm + 'mi';
+        result = initNum / miToKm;
         fullInitUnit = unitNames.km;
         fullReturnUnit = unitNames.mi;
+        shortReturnUnit = 'mi';
         break;
       default:
         result = null;
         break;
     }
-    return [result, fullInitUnit, fullReturnUnit];
+    return [result, fullInitUnit, fullReturnUnit, shortReturnUnit];
   };
 
   this.getString = function (initNum, initUnit, returnNum, returnUnit) {
