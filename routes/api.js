@@ -10,13 +10,13 @@ module.exports = function (app) {
     const initUnit = convertHandler.getUnit(req.query.input);
 
     if (!initNum && !initUnit) {
-      res.json('invalid number and unit').status(403);
+      res.json('invalid number and unit')
     }
     if (!initUnit) {
-      res.json('invalid unit').status(403);
+      res.json('invalid unit')
     }
     if (isNaN(initNum)) {
-      res.json('invalid number').status(403);
+      res.json('invalid number')
     }
     const returnUnit = convertHandler.getReturnUnit(initNum, initUnit);
 
